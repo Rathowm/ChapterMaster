@@ -281,7 +281,7 @@ global.weapons = {
 		"ammo": 0,
 		"range": 1,
 		"spli": 2,
-		"arp": 1,
+		"arp": -2,
 		"tags": ["power", "axe", "martial"],
 	},
 	"Power Fist": {
@@ -351,7 +351,7 @@ global.weapons = {
 		"range": 1,
 		"spli": 2,
 		"arp": -2,
-		"second_profiles": ["Integrated Bolter"],
+		"second_profiles": ["Integrated-Bolter"],
 		"tags": ["power", "fist", "savage", "boarding 2"],
 	},
 	"Assault Chainfist": {
@@ -568,30 +568,30 @@ global.weapons = {
 	"Bolt Pistol": {
 		"abbreviation": "BltPstl",
 		"attack": {
-			"standard": 100,
-			"master_crafted": 120,
-			"artifact": 150
+			"standard": 150,
+			"master_crafted": 175,
+			"artifact": 200
 		},
 		"description": "A smaller, more compact version of the venerable Boltgun. This model is produced in the standard Godwyn pattern.",
 		"melee_hands": 0,
 		"ranged_hands": 1,
 		"ammo": 18,
 		"range": 4.1,
-		"spli": 3,
+		"spli": 2,
 		"arp": 0,
 		"tags": ["bolt", "pistol", "boarding 1"],
 	},
 	"Wrist-Mounted Storm Bolter": { // TODO: Not used outside of this file atm;
 		"abbreviation": "WrstBlt",
 		"attack": {
-			"standard": 200,
-			"master_crafted": 240,
-			"artifact": 300
+			"standard": 275,
+			"master_crafted": 300,
+			"artifact": 350
 		},
 		"description": "A smaller, more compact version of the venerable Boltgun. This model is produced in the standard Godwyn pattern.",
 		"melee_hands": 0,
 		"ranged_hands": 1,
-		"ammo": 18,
+		"ammo": 10,
 		"range": 4.1,
 		"spli": 6,
 		"arp": 0,
@@ -967,6 +967,22 @@ global.weapons = {
 		"arp": -1,
 		"tags": ["precision", "rifle"]
 	},
+	"Needle Sniper Rifle": {
+		"abbreviation": "SnprRfl",
+		"attack": {
+			"standard": 250,
+			"master_crafted": 300,
+			"artifact": 350
+		},
+		"description": "The Sniper Rifle fires a solid shell over long range and boasts powerful telescopic sights to assist, allowing the user to target enemy weak points and distant foes.",
+		"melee_hands": 1,
+		"ranged_hands": 2,
+		"ammo": 20,
+		"range": 14,
+		"spli": 1,
+		"arp": -1,
+		"tags": ["precision", "rifle"]
+	},
 	"Assault Cannon": {
 		"abbreviation": "AssCann",
 		"attack": {
@@ -980,7 +996,7 @@ global.weapons = {
 		"ammo": 5,
 		"range": 12,
 		"spli": 20,
-		"arp": 0,
+		"arp": -1,
 		"tags": ["heavy_ranged", "dreadnought"]
 	},
 	"Autocannon": {
@@ -1076,7 +1092,7 @@ global.weapons = {
 		"ammo": 20,
 		"range": 16,
 		"spli": 28,
-		"arp": 0,
+		"arp": -1,
 		"tags": ["bolt", "heavy_ranged", "vehicle", "dreadnought"]
 	},
 	"Twin Linked Lascannon": {
@@ -1108,7 +1124,7 @@ global.weapons = {
 		"ammo": 10,
 		"range": 14,
 		"spli": 12,
-		"arp": 0,
+		"arp": -1,
 		"tags": ["heavy_ranged", "bolt"]
 	},
 	"Whirlwind Missiles": {
@@ -1145,7 +1161,7 @@ global.weapons = {
 		"ammo": 20,
 		"range": 16,
 		"spli": 21,
-		"arp": 0,
+		"arp": -1,
 		"tags": ["vehicle", "dreadnought", "heavy_ranged", "bolt"]
 	},
 	"Twin Linked Lascannon Mount": {
@@ -1177,7 +1193,7 @@ global.weapons = {
 		"ammo": 6,
 		"range": 12,
 		"spli": 40,
-		"arp": 0,
+		"arp": -1,
 		"tags": ["vehicle","heavy_ranged", "pintle", "dreadnought"]
 	},
 	"Reaper Autocannon Mount": {
@@ -1209,7 +1225,7 @@ global.weapons = {
 		"ammo": 15,
 		"range": 16,
 		"spli": 50,
-		"arp": 0,
+		"arp": -1,
 		"tags": ["bolt","heavy_ranged", "vehicle", "sponson"]
 	},
 	"Twin Linked Lascannon Sponsons": {
@@ -1321,7 +1337,7 @@ global.weapons = {
 		"ammo": 8,
 		"range": 4.1,
 		"spli": 20,
-		"arp": -2,
+		"arp": 1,
 		"tags": ["vehicle","heavy_ranged", "Sponson", "melta"],
 		"maintenance" : 0.05,
 	},
@@ -1354,7 +1370,7 @@ global.weapons = {
 		"ammo": 20,
 		"range": 14,
 		"spli": 28,
-		"arp": 0,
+		"arp": -1,
 		"tags": ["heavy_ranged", "vehicle", "sponson", "bolt"]
 	},
 	"Heavy Flamer Sponsons": {
@@ -1475,7 +1491,7 @@ global.weapons = {
 		"ranged_hands": 0,
 		"ammo": 4,
 		"range": 4.1,
-		"spli": 3,
+		"spli": 10,
 		"arp": 0,
 		"tags": ["flame", "attached"]
 	},
@@ -1658,7 +1674,7 @@ global.weapons = {
 		"ammo": 5,
 		"range": 12,
 		"spli": 40,
-		"arp": 0,
+		"arp": -1,
 		"tags": ["heavy_ranged", "twin_linked", "vehicle", "turret"]
 	},
 	"Flamestorm Cannon Turret": {
@@ -1690,7 +1706,7 @@ global.weapons = {
 		"ammo": 6,
 		"range": 4.1,
 		"spli": 20,
-		"arp": -2,
+		"arp": 1,
 		"tags": ["vehicle","heavy_ranged", "turret", "melta"]
 	},
 	"Plasma Destroyer Turret": {
@@ -1706,7 +1722,7 @@ global.weapons = {
 		"ammo": 16,
 		"range": 14,
 		"spli": 12,
-		"arp": -2,
+		"arp": 1,
 		"tags": ["plasma", "energy","heavy_ranged", "vehicle", "turret"]
 	},
 	"Heavy Conversion Beam Projector": {
