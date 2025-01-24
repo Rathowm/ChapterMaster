@@ -1437,8 +1437,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 					primary_weapon=new EquipmentStruct({},"");//create blank weapon struct
 					primary_weapon.attack=strength/3;//calculate damage from player fists
 					primary_weapon.name="fists";
-					primary_weapon.range = 1;
-					primary_weapon.ammo = -1;					
+					primary_weapon.range = 1;					
 				} else {
 					if (!valid1 && valid2){
 						primary_weapon=_wep2;
@@ -1580,7 +1579,6 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 			wrath.attack=(strength*2) +(0.5*weapon_skill);
 			wrath.name = "hammer_of_wrath";
 			wrath.range = 1;
-			wrath.ammo = -1;
 			return wrath;
 		}
 
