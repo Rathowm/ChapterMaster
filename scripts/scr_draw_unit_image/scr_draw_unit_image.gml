@@ -1371,7 +1371,7 @@ function scr_draw_unit_image(_background=false){
             }		
 
 			// Bionics
-            if (!hide_bionics || armour_type != ArmourType.Terminator) {
+            /*if (!hide_bionics || armour_type != ArmourType.Terminator) {
                 var eye_move_x = 0;
                 var eye_move_y = 0;
                 var eye_spacer = 0;
@@ -1391,7 +1391,7 @@ function scr_draw_unit_image(_background=false){
                 surface_set_target(bionic_surface);
                 var _body_parts = ARR_body_parts;
 
-                for (var part = 0; part < array_length(_body_parts); part++) {
+                /*for (var part = 0; part < array_length(_body_parts); part++) {
                     if (struct_exists(body[$ _body_parts[part]], "bionic")) {
                         if (armour_type == ArmourType.Normal || unit_armour=="Terminator Armour") {
                             var body_part = _body_parts[part];
@@ -1456,7 +1456,7 @@ function scr_draw_unit_image(_background=false){
                 surface_free(bionic_surface);
                 shader_set(sReplaceColor);
                 shader_set_uniform_i(shader_get_uniform(sReplaceColor, "u_blend_modes"), 0);                
-            }
+            }*/
             // Draw Custom Helmets
             if (armour_type==ArmourType.Normal && !armour_bypass){
                 if (unit_role == _role[eROLE.Champion]) {
