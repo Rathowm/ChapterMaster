@@ -4,6 +4,15 @@
 #macro ARR_strength_descriptions ["none", "Minimal", "Sparse", "Moderate", "Numerous", "Very Numerous", "Overwhelming"];
 
 function PlanetData(planet, system) constructor{
+//safeguards // TODO LOW DEBUG_LOGGING // Log when tripped somewhere
+    //disposition
+    if (system.dispo[planet] < -100 && system.dispo[planet] > -1000 && system.p_owner[planet] != eFACTION.Player ) { // Personal Rule code be doing some interesting things
+        system.dispo[planet] = -100; // TODO LOW DISPOSITION_REVAMP // Consider revamping the disposition system
+    } else if (system.dispo[planet] > 100) {
+        system.dispo[planet] = 100;
+    }
+//
+
 	self.planet = planet;
 	self.system = system;
 	player_disposition = system.dispo[planet];
@@ -27,10 +36,23 @@ function PlanetData(planet, system) constructor{
     	}
     }
 
-    static at_war = function(){
-    	var _at_war = false
-    	if (current_owner>5) then _at_war=true;
-        if (obj_controller.faction_status[current_owner]="War") then _at_war=true;
+    static owner_status = function(){
+    	return obj_controller.faction_status[current_owner];
+    }
+
+    static at_war = function(imperium=1, antagonism=0, war=1){
+        var _at_war = false
+        if (imperium) {
+            if (current_owner>5) then _at_war=true;
+        }
+
+        if (antagonism) {
+            if (owner_status()=="Antagonism") then _at_war=true;
+        }
+
+        if (war) {
+            if (owner_status()=="War") then _at_war=true;
+        }
         return _at_war;
     }
 
@@ -78,6 +100,14 @@ function PlanetData(planet, system) constructor{
     requests_help = system.p_halp[planet];
 
     // current planet heresy
+    if (population == 0) {
+        system.p_heresy[planet] = 0;
+        system.p_heresy_secret[planet] = 0;
+        for (var i = 0; i < array_length(system.p_influence[planet]); ++i) {
+            system.p_influence[planet][i] = 0;
+        }
+    }
+
     corruption = system.p_heresy[planet];
 
     is_heretic = system.p_hurssy[planet];
@@ -116,13 +146,15 @@ function PlanetData(planet, system) constructor{
     	return xh_force;
     }
     
-    static marine_training = planet_training_sequence;
-
     static has_feature = function(feature){
     	return planet_feature_bool(features, feature);
     }
-    
-    static has_upgrade= function(feature){
+
+    static add_feature = function(feature_type){
+    	array_push(system.p_feature[planet], new NewPlanetFeature(feature_type));
+    }
+
+    static has_upgrade = function(feature){
     	return planet_feature_bool(upgrades, feature);
     }
 
@@ -134,28 +166,37 @@ function PlanetData(planet, system) constructor{
   		}
   		return _select_features;
     }
-    static planet_training = function(local_screening_points){
-    	var _training_happend = false;
-	    if (has_feature(P_features.Recruiting_World)){
-	        if (obj_controller.gene_seed == 0) and (obj_controller.recruiting > 0) {
 
-                obj_controller.recruiting = 0;
-                obj_controller.income_recruiting = 0;
-                scr_alert("red", "recruiting", "The Chapter has run out of gene-seed!", 0, 0);
-
-	        }else if (obj_controller.recruiting > 0){
-	        	if (local_screening_points>0){
-
-	           		marine_training(local_screening_points);
-
-	           		_training_happend = true;
-	        	} else {
-	        		scr_alert("red", "recruiting", $"Recruitment on {name()} halted due to insufficient apothecary rescources", 0, 0);
-	        	}
-	        }
-		}
-		return _training_happend;   	
+    static get_local_apothecary_points = function() {
+        var _system_point_use = obj_controller.specialist_point_handler.point_breakdown.systems;
+        var _spare_apoth_points = 0;
+        if (struct_exists(_system_point_use, system.name)) {
+            var _point_data = _system_point_use[$ system.name][planet];
+            _spare_apoth_points = _point_data.heal_points - _point_data.heal_points_use;
+        }
+        return _spare_apoth_points;
     }
+
+    static marine_training = planet_training_sequence;
+
+    static planet_training = function(local_screening_points) {
+        var _training_happend = false;
+        if (has_feature(P_features.Recruiting_World)) {
+            if (obj_controller.gene_seed == 0 && obj_controller.recruiting > 0) {
+                obj_controller.recruiting = 0;
+                scr_alert("red", "recruiting", "The Chapter has run out of gene-seed!", 0, 0);
+            } else if (obj_controller.recruiting > 0) {
+                if (local_screening_points > 0) {
+                    marine_training(local_screening_points);
+
+                    _training_happend = true;
+                } else {
+                    scr_alert("red", "recruiting", $"Recruitment on {name()} halted due to insufficient apothecary rescources", 0, 0);
+                }
+            }
+        }
+        return _training_happend;
+    };
 
     static recover_starship = function(techs){
     	try {
@@ -555,14 +596,28 @@ function PlanetData(planet, system) constructor{
         }
         
         var temp6="???";
-        var tau_influence = population_influences[eFACTION.Tau];
         var target_planet_heresy=corruption;
-        if (max(target_planet_heresy,tau_influence)<=10) then temp6="None";
-        if (max(target_planet_heresy,tau_influence)>10) and (max(target_planet_heresy,tau_influence)<=30) then temp6="Little";
-        if (max(target_planet_heresy,tau_influence)>30) and (max(target_planet_heresy,tau_influence)<=50) then temp6="Major";
-        if (max(target_planet_heresy,tau_influence)>50) and (max(target_planet_heresy,tau_influence)<=70) then temp6="Heavy";
-        if (max(target_planet_heresy,tau_influence)>70) and (max(target_planet_heresy,tau_influence)<=96) then temp6="Extreme";
-        if (target_planet_heresy>=96) or (tau_influence>=96) then temp6="Maximum";
+
+        if (target_planet_heresy < 0) {
+            temp6 = "DEBUG: Heresy below 0!"
+        } else if (target_planet_heresy <= 10) {
+            temp6 = "None";
+        } else if (target_planet_heresy <= 30) {
+            temp6 = "Little";
+        } else if (target_planet_heresy <= 50) {
+            temp6 = "Major";
+        } else if (target_planet_heresy <= 70) {
+            temp6 = "Heavy";
+        } else if (target_planet_heresy <= 96) {
+            temp6 = "Extreme";
+        } else if (target_planet_heresy <= 100) {
+            temp6 = "Maximum";
+        } else if (target_planet_heresy > 100) {
+            temp6 = "DEBUG: Heresy above 100!";
+        } else {
+            temp6 = "DEBUG: Heresy somehow unknown value!"
+        }
+
         draw_text(xx+480,yy+300,$"Corruption: {temp6}");
         
         

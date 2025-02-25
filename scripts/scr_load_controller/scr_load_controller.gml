@@ -18,7 +18,7 @@ function default_bat_formation(){
 
 function scr_load_controller(save_id){
 		var rang=0,i=0,g=0,stars=0,pfleets=0,efleets=0;
-		debugl("Loading slot "+string(save_id));
+		log_message("Loading slot "+string(save_id));
 		var save_file_name = $"save{save_id}.ini";
 
 		if(file_exists("tsave.ini"))
@@ -33,7 +33,7 @@ function scr_load_controller(save_id){
 		}
 		else
 		{
-			debugl("Could not load save game " + save_file_name + ", file does not exist.");
+			log_error("Could not load save game " + save_file_name + ", file does not exist.");
 			game_restart();
 		}
 
@@ -218,6 +218,33 @@ function scr_load_controller(save_id){
 	    obj_controller.tech_points=ini_read_real("Controller","tech_points",0);
 	    obj_controller.tech_aspirant=ini_read_real("Controller","tech_aspirant",0);
 
+	    obj_controller.spec_train_data = return_json_from_ini("Controller", "spec_train",[
+		    {
+		        name : "Techmarine",
+		        min_exp : 30,
+		        coord_offset : [0, 0],
+		        req : [["technology",34, "exmore"]]
+		    },
+		    {
+		        name : "Librarian",
+		        min_exp : 30,
+		        coord_offset : [0, -7],
+		        req : [["psionic", 7, "exmore"]]
+		    },
+		    {
+		        name : "Chaplain",
+		        min_exp : 60,
+		        coord_offset : [7, -7],
+		        req : [["piety", 34, "exmore"], ["charisma", 29, "exmore"]]
+		    },
+		    {
+		        name : "Apothecary",
+		        min_exp : 60,
+		        coord_offset : [7, 0],
+		        req : [["technology", 29, "exmore"], ["intelligence",44, "exmore"]]
+		    },
+		]);
+
 	    obj_controller.penitorium=ini_read_real("Controller","penitorium",0);
 
 	    obj_controller.recruiting_worlds=ini_read_string("Controller","recruiting_worlds","");
@@ -326,7 +353,6 @@ function scr_load_controller(save_id){
 	    obj_controller.income_home=ini_read_real("Controller","income_home",0);
 	    obj_controller.income_forge=ini_read_real("Controller","income_forge",0);
 	    obj_controller.income_agri=ini_read_real("Controller","income_agri",0);
-	    obj_controller.income_recruiting=ini_read_real("Controller","income_recruiting",0);
 	    obj_controller.income_training=ini_read_real("Controller","income_training",0);
 	    obj_controller.income_fleet=ini_read_real("Controller","income_fleet",0);
 	    obj_controller.income_trade=ini_read_real("Controller","income_trade",0);

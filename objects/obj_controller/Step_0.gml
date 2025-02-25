@@ -304,11 +304,13 @@ if (menu==1 && (managing>0 || managing<0)){
             } else {
                 temp[107]="";
             } 
+            temp[108]=unit.weapon_one();
             if (is_struct(equip_data.weapon_one_data)){
                 temp[109]=equip_data.weapon_one_data.item_tooltip_desc_gen();
             } else {
                 temp[109]="";
             }
+            temp[110]=unit.weapon_two();
             if (is_struct(equip_data.weapon_two_data)){
                 temp[111]=equip_data.weapon_two_data.item_tooltip_desc_gen();
             } else {
@@ -383,7 +385,7 @@ and (faction_justmet==1) and (questing==0) and (trading_demand==0) and (complex_
     }
 }
 
-income=income_base+income_home+income_forge+income_agri+income_recruiting+income_training+income_fleet+income_trade+income_tribute;
+income=income_base+income_home+income_forge+income_agri+income_training+income_fleet+income_trade+income_tribute;
 
 if (menu==20) and ((diplomacy>0) or ((diplomacy<-5) and (diplomacy>-6))){
     if (string_length(diplo_txt)<string_length(diplo_text)){

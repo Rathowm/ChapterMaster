@@ -26,6 +26,14 @@ function Roster() constructor{
         select_all_ships.label = "All Ships";
         select_all_ships.color = CM_GREEN_COLOR;
 
+    static only_locals = function(){
+        for (var i=0;i<array_length(ships);i++){
+            var _button = ships[i];
+            _button.active = false;
+        }
+        local_button.active = true;
+    }
+
     static format_roster_string = function(){
         roster_string = "";
         var _roster_types = struct_get_names(selected_roster);
@@ -120,17 +128,17 @@ function Roster() constructor{
 		    	 	_add = true;
 		    	 }
 		   	} else {
-                 if (!array_contains(_valid_companies, _unit[0])) then continue;
+                if (!array_contains(_valid_companies, _unit[0])) then continue;
                 var _role = obj_ini.veh_role[_unit[0]][_unit[1]];
 		   		var _vehic_lid = obj_ini.veh_lid[_unit[0]][_unit[1]];
                 if (array_contains(_valid_vehicles, _role)){
     		   		if (_vehic_lid>-1){
     		    	 	if (array_contains(_valid_ship ,_vehic_lid)){
     		    	 		_add = true;  	 		
-    		    	 	} else if (local_button.active){
-    		    	 		_add = true;
     		    	 	}
-    		   		}
+    		   		}else if (local_button.active){
+                        _add = true;
+                    }
                 }
 		   	}
 
@@ -305,9 +313,11 @@ function Roster() constructor{
         	 	 	}
         	 	}
                 if (_allow){
-                    if (!obj_drop_select.attack){
-    
-                        _allow = array_contains(_raid_allowable, _v_role);
+                    if (instance_exists(obj_drop_select)){
+                        if (!obj_drop_select.attack){
+        
+                            _allow = array_contains(_raid_allowable, _v_role);
+                        }
                     }
                 }
         	 	if (_allow){
@@ -334,9 +344,11 @@ function Roster() constructor{
             array_push(company_buttons,_button);
         }
         var _ships = get_player_ships(roster_location);
+        var _ship_index;
         for (var s=0;s<array_length(_ships);s++){
-            if (obj_ini.ship_carrying[s]>0){
-                new_ship_button(obj_ini.ship[_ships[s]],_ships[s]);
+            _ship_index = _ships[s];
+            if (obj_ini.ship_carrying[_ship_index]>0){
+                new_ship_button(obj_ini.ship[_ship_index],_ship_index);
             }
         }
     }
@@ -347,15 +359,46 @@ function Roster() constructor{
             meeting = true;
             if (company == 0) and(v <= obj_temp_meeting.dudes) and(obj_temp_meeting.present[v] == 1) then okay = 1;
             else if (company > 0) or(v > obj_temp_meeting.dudes) then okay = 0;
-        }        
+        }
+        var size_count = 0;
+        var _limit = obj_ncombat.man_size_limit;
+        var _has_limit = _limit>0;
+        var _add;
+        var _unit, _size;
         for (var i=0; i<array_length(selected_units);i++){
+            if (_has_limit && _limit == size_count) then break;
+            _add = true;
+
             if (is_struct(selected_units[i])){
-                add_unit_to_battle(selected_units[i], meeting);
+                var _unit = selected_units[i];
+                if (_has_limit){
+                    var _size = _unit.get_unit_size()
+                    _add = (_size+size_count)<=_limit;
+                    if (_add){
+                        size_count+=_size;
+                    }
+                }
+                if (_add){
+                    add_unit_to_battle(_unit, meeting);
+                }
             } else {
-                add_vehicle_to_battle(selected_units[i][0], selected_units[i][1], is_roster_unit_local(selected_units[i]));
+                var _vehic = selected_units[i];
+                var _type = obj_ini.veh_role[_vehic[0]][_vehic[1]];
+                if (_has_limit){
+                    var _size = scr_unit_size("",_type, true);
+                    _add = _size+size_count<=_limit;
+                    if (_add){
+                        size_count+=_size;
+                    }
+                }
+                if (_add){          
+                    add_vehicle_to_battle(_vehic[0], _vehic[1], is_roster_unit_local(_vehic));
+                }
             }
         }
     }
+
+
     static marines_total = function(){
         var _marines = 0;
         for (var i=0;i<array_length(full_roster_units);i++){
@@ -632,24 +675,6 @@ function add_unit_to_battle(unit,meeting, is_local){
 
     with (targ){
         scr_add_unit_to_roster(unit, is_local);
-    }
-
-    // marine_attack[i]=1;
-    // marine_ranged[i]=1;
-    // marine_defense[i]=1;
-    man_size = unit.get_unit_size();
-
-    //evaluates if there is a limit on the size of men that can be in a battle and only adds the allowable number to roster
-    if (new_combat.man_size_limit == 0) {
-        new_combat.fighting[cooh][va] = 1;
-    } else {
-        if (new_combat.man_size_count + man_size <= new_combat.man_size_limit) {
-            new_combat.fighting[cooh][va] = 1;
-            new_combat.man_size_count += man_size;
-            if (man_size_count == new_combat.man_size_limit) {
-                new_combat.man_limit_reached = true;
-            }
-        }
     }
 }   
 

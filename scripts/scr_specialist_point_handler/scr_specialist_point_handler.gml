@@ -65,7 +65,7 @@ function SpecialistPointHandler() constructor{
         };
         healing_and_point_use();
 
-        var _noticed_heresy=false, at_forge=0;
+        var at_forge=0;
         tech_locations=[]
         var _cur_tech;
         total_techs = array_length(techs);
@@ -199,6 +199,7 @@ function SpecialistPointHandler() constructor{
         try{
         var tech_test, charisma_test, piety_test, _met_non_heretic, heretics_persuade_chances;
         var _tester = global.character_tester;
+        var _noticed_heresy = false; // should this be in the for loop?
         if (array_length(heretics)>0 && obj_controller.turn>75){
             var _heretic_location, _same_location, _current_heretic, _current_tech;
             //iterate through tech heretics;
@@ -382,7 +383,7 @@ function SpecialistPointHandler() constructor{
             _cur_slave = _slaves[i];
             if (_cur_slave.num>0){
                 _cur_slave.eta--;
-                if (irandom(100000)<obj_ini.stability*_cur_slave.num){
+                if (irandom(100000)<=(10-obj_ini.stability)*_cur_slave.num){
                     _cur_slave.num--;
                     _lost_gene_slaves++;
                     scr_add_item("Gene Pod Incubator");

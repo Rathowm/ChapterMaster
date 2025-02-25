@@ -254,7 +254,7 @@ function collect_role_group(group="standard", location="", opposite=false, searc
 	        }
 	        if (_add){
 	        	if (struct_exists(search_conditions, "stat")){
-	        		_add = stat_valuator(search_conditions[$ "stat"], unit);
+	        		_add = stat_valuator(search_conditions.stat, unit);
 	        	}
 	        	if (struct_exists(search_conditions,"job")){
 	        		_add =  (unit.assignment() == search_conditions.job);
@@ -269,16 +269,41 @@ function collect_role_group(group="standard", location="", opposite=false, searc
 function stat_valuator(search_params, unit){
 	match = true;
 	for (var stat = 0;stat<array_length(search_params);stat++){
-		if (search_params[stat][2] =="more"){
-			if (unit[$ search_params[stat][0]] < search_params[stat][1]){
-				match = false;
-				break;
-			}
-		} else if(search_params[stat][2] =="less"){
-				if (unit[$ search_params[stat][0]] > search_params[stat][1]){
-				match = false;
-				break;
-			}           					
+		var _stat_val = search_params[stat];		
+		if (!struct_exists(unit,_stat_val[0])){
+			match = false;
+			break;
+		}
+		switch _stat_val[2] {
+    		case "inmore":
+	    	case "more":
+    			if (unit[$ _stat_val[0]] < _stat_val[1]){
+    				match = false;
+					break;
+    			}
+			break;
+
+    		case "exmore":
+    			if (unit[$ _stat_val[0]] <= _stat_val[1]){
+    				match = false;
+					break;
+    			}
+			break;
+
+    		case "inless":
+	    	case "less":
+    			if (unit[$ _stat_val[0]] > _stat_val[1]){
+    				match = false;
+					break;
+    			}
+			break;
+
+    		case "exless":
+    			if (unit[$ _stat_val[0]] >= _stat_val[1]){
+    				match = false;
+					break;
+    			}
+			break;
 		}
 	}
 	return match;	

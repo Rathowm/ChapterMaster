@@ -1,7 +1,7 @@
 // Script assets have changed for v2.3.0 see
 // https://help.yoyogames.com/hc/en-us/articles/360005277377 for more information
 function scr_save_controller(save_id){
-    debugl("Saving to slot "+string(save_id));
+    log_message("Saving to slot "+string(save_id));
     ini_open($"save{save_id}.ini");
     // Global variables
     ini_write_string("Save","chapter_name",global.chapter_name);
@@ -181,6 +181,8 @@ function scr_save_controller(save_id){
     ini_write_real("Controller","psyker_points",obj_controller.psyker_points);
     ini_write_real("Controller","psyker_aspirant",obj_controller.psyker_aspirant);
     ini_write_real("Controller","training_techmarine",obj_controller.training_techmarine);
+    ini_encode_and_json("Controller", "spec_train",obj_controller.spec_train_data);
+
     ini_write_real("Controller","tech_points",obj_controller.tech_points);
     ini_write_real("Controller","tech_aspirant",obj_controller.tech_aspirant);
 
@@ -266,7 +268,6 @@ function scr_save_controller(save_id){
     ini_write_real("Controller","income_home",obj_controller.income_home);
     ini_write_real("Controller","income_forge",obj_controller.income_forge);
     ini_write_real("Controller","income_agri",obj_controller.income_agri);
-    ini_write_real("Controller","income_recruiting",obj_controller.income_recruiting);
     ini_write_real("Controller","income_training",obj_controller.income_training);
     ini_write_real("Controller","income_fleet",obj_controller.income_fleet);
     ini_write_real("Controller","income_trade",obj_controller.income_trade);
