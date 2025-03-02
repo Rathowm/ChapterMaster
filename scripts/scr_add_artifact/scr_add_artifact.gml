@@ -292,6 +292,36 @@ function ArtifactStruct(Index) constructor{
 
 	}
 
+    static artifact_faction_value = function(faction) {
+        #macro ART_PLAYER []
+        #macro ART_IMPERIUM ["PUR", "ADAMANTINE", "GLOW", "CHB", "UFL", "UBOLT", "DUB"]
+        #macro ART_MECHANICUS ["PUR", "RO", "CRU"]
+        #macro ART_INQUISITION ["PUR"]
+        #macro ART_ECCLESIARCHY ["PUR", "ART", "GOLD"]
+        #macro ART_ELDAR ["SUP", "ART", "JAD", "SILENT", "SCOPE"]
+        #macro ART_ORK []
+        #macro ART_TAU ["SUP", "ART", "BIG", "SOO", "SCOPE"]
+        #macro ART_TYRANIDS [] // Tyranids, Genestealers
+        #macro ART_CHAOS [] // Chaos, Heretics
+        #macro ART_NECRONS []
+
+        if (faction < 0 || faction >= array_length(faction_preferences)) {
+            // Logging or fallback
+            log_warning("Warning: Faction index out of range. Defaulting to empty preferences.");
+            return 0;
+        }
+
+        var returnvalue = 0;
+        var faction_preferences = [[], ART_PLAYER, ART_IMPERIUM, ART_MECHANICUS, ART_INQUISITION, ART_ECCLESIARCHY, ART_ELDAR, ART_ORK, ART_TAU, ART_TYRANIDS, ART_CHAOS, ART_CHAOS, ART_TYRANIDS, ART_NECRONS];
+        var like_tags_array = faction_preferences[faction];
+        for (var i = 0; i<array_length(like_tags_array); i++) {
+            if (has_tag(like_tags_array[i])) {
+                returnvalue += 2;
+            }
+        }
+        return returnvalue;
+    }
+
 	static destroy_arti = function(){
         if (has_tag("daemonic")){
             if (ship_id()){
@@ -345,16 +375,16 @@ function ArtifactStruct(Index) constructor{
 			var unit = fetch_unit(bearer);
 			if (_b_type=="weapon"){
 				if (unit.weapon_one(true) == index){
-					unit.update_weapon_one("", false, false);
+					unit.update_weapon_one("", false, true);
 				} else if (unit.weapon_two(true) == index){
-					unit.update_weapon_two("", false, false);
+					unit.update_weapon_two("", false, true);
 				} 
 			} else if (_b_type=="gear"){
-				unit.update_gear("", false, false);
+				unit.update_gear("", false, true);
 			} else if (_b_type=="armour"){
-				unit.update_armour("", false, false);
+				unit.update_armour("", false, true);
 			} else if (_b_type=="mobility"){
-				unit.update_mobility_item("", false, false);
+				unit.update_mobility_item("", false, true);
 			}
 			bearer = false;
 			obj_ini.artifact_equipped[index] = false;
@@ -368,10 +398,10 @@ function ArtifactStruct(Index) constructor{
 					for (var i=0;i<array_length(obj_ini.role[co]);i++){
 						_unit = fetch_unit([co,i]);
 						if (_unit.weapon_one(true) == index){
-							_unit.update_weapon_one("", false, false);
+							_unit.update_weapon_one("", false, true);
 							_bearer_found = true
 						} else if (_unit.weapon_two(true) == index){
-							_unit.update_weapon_two("", false, false);
+							_unit.update_weapon_two("", false, true);
 							_bearer_found = true
 						}
 						if (_bearer_found){
@@ -399,7 +429,7 @@ function ArtifactStruct(Index) constructor{
 						for (var i=0;i<array_length(obj_ini.role[co]);i++){
 							var _unit = fetch_unit([co,i]);
 							if (_unit[$_find_function](true) == index){
-								_unit[$_update_function]("", false, false);
+								_unit[$_update_function]("", false, true);
 								_bearer_found = true
 							}
 							if (_bearer_found){

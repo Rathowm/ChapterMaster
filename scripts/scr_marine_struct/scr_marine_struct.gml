@@ -335,6 +335,13 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 	religion_sub_cult = "none";
 	base_group = "none";
 	role_history = [];
+    enum eROLE_TAG {
+        Techmarine = 0,
+        Librarian = 1,
+        Chaplain = 2,
+        Apothecary = 3
+    }
+    role_tag = [0, 0, 0, 0]; // [Techmarine, Librarian, Chaplain, Apothecary] // maybe add to list instead?
 	encumbered_ranged=false;
 	encumbered_melee=false;
 	home_world="";
@@ -651,6 +658,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 	static draw_unit_image = scr_draw_unit_image;
 	static display_wepaons = scr_ui_display_weapons;
 	static unit_profile_text = scr_unit_detail_text;
+	static has_equipped = unit_has_equipped;
 	static unit_equipment_data= function(){
 		var armour_data=get_armour_data()
 		var gear_data=get_gear_data()
@@ -701,19 +709,30 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 		}, 
 		"torso":{
 			cloth:{
-				variation:irandom(15),
+				variation:irandom(100),
 			},
-			armour_choice:irandom(100),
-			variation:irandom(10),
-			backpack_variation:irandom(100),
+			tabbard_variation:irandom(100),
+			armour_choice :  irandom(100),
+			variation: irandom(10),
+			backpack_variation: irandom(100),
+			backpack_decoration_variation : irandom(100),
+			backpack_augment_variation : irandom(100),
 			thorax_variation : irandom(100),
 			chest_variation : irandom(100),
+			belt_variation : irandom(100),
+			chest_fastening : irandom(100),
 		}, 
 		"left_arm":{
 			trim_variation : irandom(100),
+			personal_livery : irandom(100),
+			pad_variation : irandom(100),
+			variation : irandom(100),
 		},
 		"right_arm":{
 			trim_variation : irandom(100),
+			personal_livery : irandom(100),
+			pad_variation : irandom(100),
+			variation : irandom(100),			
 		}, 
 		"left_eye":{
 			variant : irandom(100),
@@ -899,7 +918,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 			var _robe_chance = 5;
 			if (global.chapter_name == "Black Templars"){
 				_robe_chance += 70;
-			}else if(global.chapter_name == "Dark Angels" || obj_ini.progenitor == ePROGENITOR.DARK_ANGELS){
+			} else if (scr_has_style("Knightly")){
 				_robe_chance += 50;
 			}
 			if (irandom(100) <= _robe_chance) {
@@ -922,6 +941,7 @@ function TTRPG_stats(faction, comp, mar, class = "marine", other_spawn_data={}) 
 					body.cloak.type = "pelt";
 				} else {
 					body.cloak.type = "cloth";
+					body.cloak.variation = irandom(100);
 					body.cloak.image_0 = irandom(100);
 					body.cloak.image_1 = irandom(100);
 				}
