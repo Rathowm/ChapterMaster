@@ -573,7 +573,7 @@ function PlanetData(planet, system) constructor{
                         obj_controller.requisition-=improve_cost;
                         alter_fortification(1);
                         
-                        if (system.dispo[planet]>0) and (system.dispo[planet]<=100){
+                        if (player_disposition>0) and (player_disposition<=100){
                             system.dispo[planet]=min(100,system.dispo[planet]+(9-fortification_level));
                         }
                     }
