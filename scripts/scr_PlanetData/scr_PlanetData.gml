@@ -13,10 +13,10 @@ function PlanetData(planet, system) constructor{
     }
 //
 
-	self.planet = planet;
-	self.system = system;
+    self.planet = planet;
+    self.system = system;
     player_disposition = system.dispo[planet];
-	planet_type = system.p_type[planet];
+    planet_type = system.p_type[planet];
     operatives = system.p_operatives[planet];
     features =system.p_feature[planet];
     current_owner = system.p_owner[planet];
