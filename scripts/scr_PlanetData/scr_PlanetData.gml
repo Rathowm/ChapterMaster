@@ -456,7 +456,7 @@ function PlanetData(planet, system) constructor{
         draw_rectangle(xx+349,yy+175,xx+717,yy+192,1);
         draw_set_color(c_white);
         
-        var player_dispo = player_disposition;
+        var player_dispo = system.dispo[planet];
         if (!_succession){
             if (player_dispo>=0) and (origional_owner<=5) and (current_owner<=5) and (population>0) then draw_text(xx+534,yy+176,"Disposition: "+string(min(100,player_dispo))+"/100");
             if (player_dispo>-30) and (player_dispo<0) and (current_owner<=5) and (population>0){
@@ -573,8 +573,8 @@ function PlanetData(planet, system) constructor{
                         obj_controller.requisition-=improve_cost;
                         alter_fortification(1);
                         
-                        if (player_disposition>0) and (player_disposition<=100){
-                            player_disposition=min(100,player_disposition+(9-fortification_level));
+                        if (system.dispo[planet]>0) and (system.dispo[planet]<=100){
+                            system.dispo[planet]=min(100,system.dispo[planet]+(9-fortification_level));
                         }
                     }
                     
